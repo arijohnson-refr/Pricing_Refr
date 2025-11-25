@@ -1839,7 +1839,7 @@
 
 /* Shiny pill */
 .pricing-plan-per-year::after {
-  content: "Black Friday · 50% OFF";
+  content: "Black Friday · 35% OFF";
   display: inline-flex;
   align-items: center;
   justify-content: center;
