@@ -1,0 +1,1877 @@
+/* ================================
+   PROMO BAR
+   ================================ */
+
+/* Make the whole bar obviously interactive, premium, and accessible */
+.promo-block{
+  background: linear-gradient(90deg, #FFD700, #FFC300);
+  color:#000;
+  display:block;
+  text-align:center;
+  cursor:pointer;
+  border-bottom:2px solid rgba(0,0,0,.1);
+  position:relative;
+  z-index:1000;
+  transition: box-shadow .25s ease, transform .25s ease, background .25s ease;
+  overflow:hidden;
+  border: 1px solid rgba(255, 255, 255, 0.35); /* soft light edge */
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.4),
+    inset 0 -1px 2px rgba(0,0,0,0.15),
+    0 3px 10px rgba(255, 215, 0, 0.25); /* subtle depth */
+  background: linear-gradient(180deg,
+              rgba(255,215,0,0.95) 0%,
+              rgba(255,200,0,0.95) 60%,
+              rgba(255,170,0,0.9) 100%);
+  backdrop-filter: saturate(140%) blur(4px); /* adds inner “glass” polish */
+
+}
+
+/* --- glass highlight overlay --- */
+/* Inner glossy pill outline */
+.promo-block::after {
+  content: "";
+  position: absolute;
+  inset: 4px; /* distance from the edges to create the inner pill */
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.4); /* inner glass rim */
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  box-shadow:
+    inset 0 1px 3px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 4px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+
+.promo-block:hover::after {
+  opacity: 0.85;
+}
+
+
+
+/* Shine sweep (subtle, premium cue) */
+.promo-block::before{
+  content:"";
+  position:absolute; top:0; left:-75%;
+  width:50%; height:100%;
+  background:linear-gradient(120deg, rgba(255,255,255,0) 0%,
+                                      rgba(255,255,255,.45) 50%,
+                                      rgba(255,255,255,0) 100%);
+  transform:skewX(-20deg);
+  pointer-events:none;
+  transition:left .9s ease-in-out;
+}
+.promo-block:hover::before{ left:125%; }
+
+/* Hover lift + soft gold glow */
+.promo-block:hover{
+  background: linear-gradient(90deg, #FFC300, #FFB700);
+  box-shadow: 0 4px 15px rgba(255,209,0,.35);
+  transform: translateY(-1px);
+}
+
+/* Keyboard focus ring for a11y (still premium-looking) */
+.promo-block:focus-visible{
+  outline: 2px solid #111;
+  outline-offset: -4px;
+  box-shadow: 0 0 0 2px rgba(255,209,0,.6) inset;
+}
+
+/* Inline layout using your three H1s */
+.promo-block h1{
+  margin:0;
+  line-height:1.2;              /* consistent vertical alignment */
+  font-weight:800;
+  display:inline-block;
+  vertical-align:middle;
+}
+
+/* Emoji on the left */
+.gift-emoji{
+  font-size: 18px;               /* visually balanced against text */
+  margin-right:10px;
+  display:inline-block;
+  transform-origin:center;
+  animation: promoPulse 1.8s infinite ease-in-out;
+}
+
+/* Main message text */
+.banner-link-txt{
+  font-size: clamp(14px, 1.05vw, 16px);
+  letter-spacing:.3px;
+}
+
+/* Arrow on the right */
+.arrow-text{
+  font-size: 18px;
+  margin-left:10px;
+  opacity:.8;
+  display:inline-block;
+  transition: transform .3s ease, opacity .3s ease;
+}
+
+/* Encourage click with a tiny nudge */
+.promo-block:hover .arrow-text{
+  transform: translateX(4px) translateY(-2px);
+  opacity:1;
+}
+
+/* Emoji pulse — toned to a high-end feel */
+@keyframes promoPulse{
+  0%,100%{ transform:scale(1);   opacity:1; }
+  50%    { transform:scale(1.22); opacity:.85; }
+}
+
+
+/* ==========================
+   PROMO BAR FIXED RESPONSIVE
+   ========================== */
+
+/* ================================
+   PROMO BAR — pixel-tight on mobile
+   (desktop unchanged)
+   ================================ */
+
+/* ================================
+   PROMO BAR — same design, tighter height
+   ================================ */
+
+/* ================================
+   PROMO BAR — final height lock
+   ================================ */
+
+/* === PROMO BAR: aggressive reset & height lock === */
+.promo-block,
+.promo-block * {
+  box-sizing: border-box !important;
+}
+
+/* reset direct children that often carry Webflow spacing */
+.promo-block,
+.promo-block > a,
+.promo-block h1,
+.promo-block .banner-link-txt,
+.promo-block .gift-emoji,
+.promo-block .arrow-text {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  vertical-align: middle !important;
+}
+
+/* force the bar into a single, tight row and lock height */
+.promo-block {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 6px 10px !important;        /* tiny padding */
+  min-height: 36px !important;         /* desktop-like height */
+  max-height: 36px !important;         /* prevent expansion */
+  height: 36px !important;             /* enforce exact height */
+  overflow: hidden !important;         /* hide any overflowing content */
+}
+
+/* content styles that must be kept compact */
+.promo-block h1 {
+  display: inline-flex !important;
+  align-items: center !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+
+/* emoji + arrow — keep them snug */
+.promo-block .gift-emoji,
+.promo-block .arrow-text {
+  display: inline-flex !important;
+  align-items: center !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+  margin: 0 6px !important;
+}
+
+/* Allow graceful wrap only on very small screens, but still keep height small */
+@media (max-width: 480px) {
+  .promo-block {
+    padding: 5px 8px !important;
+    min-height: 32px !important;
+    max-height: 32px !important;
+    height: 32px !important;
+  }
+  .promo-block h1 { font-size: 13px !important; white-space: normal !important; }
+  .promo-block .gift-emoji,
+  .promo-block .arrow-text { font-size: 14px !important; margin: 0 4px !important; }
+}
+
+/* If promo-block is an <a> or contains anchors, make sure anchors don't add extra padding */
+.promo-block a { display: inline-flex !important; align-items: center !important; padding: 0 !important; margin:0 !important; height: auto !important; }
+
+
+/* Inner pill stays centered and hugs content */
+.promo-inner {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 26px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  box-shadow:
+    inset 0 1px 3px rgba(255, 255, 255, 0.25),
+    inset 0 -1px 4px rgba(0, 0, 0, 0.25),
+    0 2px 8px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(8px) saturate(160%);
+  -webkit-backdrop-filter: blur(8px) saturate(160%);
+  margin: 0 auto !important;
+  text-align: center;
+  width: fit-content !important;  /* prevents full-width stretch */
+  max-width: 90vw;                /* optional safety cap */
+}
+
+/* Kill the full-width glassy pill from .promo-block */
+.promo-block::after {
+  content: none !important;
+}
+
+/* === PROMO BAR: increase top/bottom padding, keep pill centered === */
+.promo-block {
+  padding-top: 15px !important;
+  padding-bottom: 15px !important;
+  min-height: auto !important;
+  max-height: none !important;
+  height: auto !important;
+}
+
+/* Optional: keep pill vertically centered inside the expanded bar */
+.promo-inner {
+  margin: 0 auto !important;
+  align-items: center !important;
+}
+
+
+/* --- SECONDARY HOVER MOTION: promo-inner --- */
+.promo-inner {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* When hovering over the pill itself */
+.promo-inner:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow:
+    inset 0 1px 4px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 6px rgba(0, 0, 0, 0.25),
+    0 4px 10px rgba(255, 215, 0, 0.35);
+}
+
+/* Optional — combine with parent hover for a staggered feel */
+.promo-block:hover .promo-inner {
+  transition-delay: 0.05s;
+  transform: translateY(-1px) scale(1.01);
+}
+
+/* ---------- Design Tokens ---------- */
+:root{
+  --bg: #fff;
+  --ink: #0a0a0a;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --surface: #f7f7f8;
+  --surface-2:#fafafa;
+  --brand:#ffc400;
+  --brand-hover:#ffd84d;
+  --brand-ink:#111;
+  --shadow-sm: 0 2px 10px rgba(0,0,0,.05);
+  --shadow-md: 0 10px 30px rgba(0,0,0,.08);
+  --radius: 12px;
+  --radius-lg: 16px;
+}
+
+/* ---------- Card ---------- */
+.pricing-plan-card-starter{
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 2rem;
+  width: 360px;
+  display:flex;
+  flex-direction:column;
+  transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s cubic-bezier(.2,.8,.2,1);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
+  color: var(--ink);
+  background-image: radial-gradient(1200px 400px at 50% -20%, rgba(255,196,0,.06), transparent);
+}
+.pricing-plan-card-starter:hover{
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ---------- Header ---------- */
+.pricing-plan-header{ margin-bottom: .875rem; }
+.pricing-plan-name{
+  font-size:1.125rem;
+  font-weight:800;
+  margin-bottom:.25rem;
+}
+.pricing-plan-price{
+  font-feature-settings:"tnum" 1,"lnum" 1;
+  font-size: 2.75rem;
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom:.1rem;
+}
+.pricing-plan-per-year{
+  color: var(--muted);
+  margin:.1rem 0 1.1rem;
+  font-size: .95rem;
+}
+.pricing-plan-price-note{
+  color:#9aa1ac;
+  font-size:.9rem;
+  margin-top:.25rem;
+}
+
+/* ---------- Features ---------- */
+.pricing-plan-features-list{
+  border-top:1px solid #edf0f3;
+  border-bottom:1px solid #edf0f3;
+  padding: 1rem 0;
+  margin: .75rem 0 1rem;
+}
+.pricing-plan-feature{
+  margin:.4rem 0;
+  font-size:.98rem;
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  color:#1f2937;
+}
+.pricing-plan-feature::before {
+  content: "";
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+  background: no-repeat center center / contain;
+}
+
+.pricing-plan-non-feature {
+  margin: .4rem 0;
+  font-size: .98rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  color: #9ca3af;
+  opacity: 0.65;
+}
+
+.pricing-plan-non-feature::before {
+  content: "";
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+  background: no-repeat center center / contain;
+  opacity: 0.4;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='18' y1='6' x2='6' y2='18'/%3E%3Cline x1='6' y1='6' x2='18' y2='18'/%3E%3C/svg%3E");
+}
+
+
+
+
+
+
+
+
+
+/* ---------- Dropdown (fixed alignment) ---------- */
+.pricing-plan-drop-totals{ margin-top:1.1rem; }
+.pricing-plan-add-games{
+  font-weight:700;
+  font-size:.96rem;
+  color:#1f2937;
+  margin-bottom:.5rem;
+}
+.pricing-plan-dropdown .w-dropdown-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  border: 1px solid #d7dbe2;
+  border-radius: 10px;
+  padding: 0.7rem 2.4rem 0.7rem 0.9rem;
+  background: var(--bg);
+  font-size: 0.97rem;
+  color: #111827;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.08s ease;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.pricing-plan-dropdown .w-dropdown-toggle:hover{
+  border-color:#cfd4dd;
+  box-shadow: 0 1px 0 rgba(0,0,0,.03);
+}
+.pricing-plan-dropdown-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pricing-plan-dropdown-icon {
+  position: absolute;
+  right: 1.1rem;
+  top: 50%;
+  transform: translateY(-75%);
+  font-size: 0.95rem;
+  color: #6b7280;
+  line-height: 1;
+  pointer-events: none;
+}
+.w-dropdown-list{
+  border:1px solid #e6e7ec;
+  border-radius:12px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow: 0 18px 40px rgba(0,0,0,.12);
+  margin-top:.4rem;
+  display:none;
+}
+.w-dropdown-list.w--open { display:block; }
+.w-dropdown-list a{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:.7rem .9rem;
+  font-size:.95rem;
+  color:#111827;
+  transition: background .12s ease;
+}
+.w-dropdown-list a:hover{ background:#f7f8fa; }
+
+/* ---------- Totals table ---------- */
+.pricing-plan-totals-table{
+  background: var(--surface-2);
+  border:1px solid #eff1f4;
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem; /* ✅ Added spacing before buttons */
+  font-size: .95rem;
+  color:#2b2f36;
+}
+.pricing-plan-totals-table div{
+  display:flex; justify-content:space-between; align-items:center;
+  margin:.36rem 0; line-height:1.45;
+}
+.pricing-plan-totals-label{ color:#6b7280; font-weight:500; }
+.pricing-plan-totals-value{ font-weight:700; color:#111827; }
+.pricing-plan-totals-table .highlight{ color: var(--brand); font-weight:800; }
+.pricing-plan-totals-table .divider{
+  border-top:1px solid #e8eaee; margin-top:.65rem; padding-top:.45rem;
+}
+.pricing-plan-annual-total .pricing-plan-totals-label{ font-weight:800; color:#111827; }
+
+/* ---------- Change flash ---------- */
+@keyframes flash {
+  0% { background: rgba(255,196,0,.18); }
+  100% { background: transparent; }
+}
+.changed{ animation: flash .6s ease-out; border-radius:6px; }
+
+/* ---------- Buttons ---------- */
+.pricing-plan-free-trial,
+.pricing-plan-free-trial.w-button,
+.pricing-plan-free-trial a,
+.pricing-plan-free-trial button,
+.pricing-plan-free-trial > a.w-button,
+.pricing-plan-free-trial > button {
+  display:block;
+  width:100%;
+  text-align:center;
+  padding:1rem 1.1rem;
+  border-radius:10px;
+  font-weight:700;
+  font-size:1rem;
+  letter-spacing:.1px;
+  background:#fff;
+  color:#111;
+  border:1.8px solid #111;
+  transition:transform .2s ease, box-shadow .25s ease, background .2s ease, color .2s ease, border-color .2s ease;
+  margin-top: 0.25rem;
+  margin-bottom: 0.75rem; /* ✅ spacing between buttons */
+}
+.pricing-plan-free-trial:hover {
+  background:#111;
+  color:#fff;
+  transform:translateY(-1px);
+  box-shadow:0 6px 16px rgba(0,0,0,.12);
+}
+
+.pricing-plan-demo,
+.pricing-plan-demo.w-button,
+.pricing-plan-demo a,
+.pricing-plan-demo button,
+.pricing-plan-demo > a.w-button,
+.pricing-plan-demo > button {
+  display:block;
+  width:100%;
+  text-align:center;
+  padding:1rem 1.1rem;
+  border-radius:10px;
+  font-weight:700;
+  font-size:1rem;
+  letter-spacing:.1px;
+  background:#ffc400;
+  color:#111;
+  border:1.5px solid transparent;
+  box-shadow:0 3px 8px rgba(255,196,0,.30);
+  transition:transform .2s ease, box-shadow .25s ease, filter .2s ease, background .2s ease, color .2s ease;
+  margin-top: 0; /* ✅ consistent spacing */
+}
+.pricing-plan-demo:hover {
+  filter:brightness(1.03);
+  transform:translateY(-1px);
+  box-shadow:0 8px 22px rgba(255,196,0,.35);
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 420px){
+  .pricing-plan-card-starter{ width:100%; padding:1.4rem; }
+  .pricing-plan-price{ font-size:2.25rem; }
+}
+
+
+/* ---------- PROFESSIONAL CARD ---------- */
+.pricing-plan-card-professional {
+  background: var(--bg);
+  border: 1px solid rgba(3,183,216,0.85);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 0 12px rgba(3,183,216,0.15),
+    0 0 24px rgba(3,183,216,0.10);
+  padding: 2rem;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s cubic-bezier(.2,.8,.2,1);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
+  color: var(--ink);
+  background-image: radial-gradient(1200px 400px at 50% -20%, rgba(3,183,216,.08), transparent);
+}
+.pricing-plan-card-professional:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 0 20px rgba(3,183,216,0.25),
+    0 0 40px rgba(3,183,216,0.15);
+}
+
+/* ---------- Badge ---------- */
+.pricing-plan-badge {
+  position: absolute;
+  top: -0.9rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #03b7d8;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 50px;
+  box-shadow: 0 2px 8px rgba(3,183,216,0.35);
+  letter-spacing: 0.2px;
+  text-align: center;
+}
+
+/* ---------- Professional Feature Check Color ---------- */
+.pricing-plan-card-professional .pricing-plan-feature::before {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%2303b7d8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+}
+
+
+
+/* ---------- Totals Highlight ---------- */
+.pricing-plan-card-professional .pricing-plan-totals-table .highlight {
+  color: #03b7d8;
+}
+
+/* ---------- Demo Button Override ---------- */
+.pricing-plan-card-professional .pricing-plan-demo {
+  background: #03b7d8;
+  box-shadow: 0 3px 8px rgba(3,183,216,0.3);
+}
+.pricing-plan-card-professional .pricing-plan-demo:hover {
+  filter: brightness(1.05);
+  box-shadow: 0 8px 22px rgba(3,183,216,0.4);
+}
+
+
+
+/* ---------- COMMERCIAL CARD ---------- */
+.pricing-plan-card-commercial {
+  background: var(--bg);
+  border: 1px solid rgba(255,209,0,0.7);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 0 12px rgba(255,209,0,0.18),
+    0 0 32px rgba(255,209,0,0.12);
+  padding: 2rem;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s cubic-bezier(.2,.8,.2,1);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
+  color: var(--ink);
+  background-image: radial-gradient(1200px 400px at 50% -20%, rgba(255,209,0,.10), transparent);
+}
+.pricing-plan-card-commercial:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 0 24px rgba(255,209,0,0.35),
+    0 0 48px rgba(255,209,0,0.18);
+}
+
+/* ---------- Badge (Gold Gradient) ---------- */
+.pricing-plan-badge-commercial {
+  position: absolute;
+  top: -0.9rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, #ffd100, #ffb700);
+  color: #111;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.35rem 1rem;
+  border-radius: 50px;
+  box-shadow: 0 3px 10px rgba(255,209,0,0.45);
+  letter-spacing: 0.2px;
+  text-align: center;
+}
+
+.pricing-plan-card-starter .pricing-plan-feature::before {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%23bbbbbb' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+}
+
+
+
+/* ---------- Gold Checkmarks ---------- */
+.pricing-plan-card-commercial .pricing-plan-feature::before {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%23ffd100' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+}
+
+
+
+/* ---------- Totals Highlight ---------- */
+.pricing-plan-card-commercial .pricing-plan-totals-table .highlight {
+  background: linear-gradient(90deg, #ffd100, #ffb700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+}
+
+/* ---------- Demo Button Override ---------- */
+.pricing-plan-card-commercial .pricing-plan-demo {
+  background: linear-gradient(90deg, #ffd100, #ffb700);
+  color: #111;
+  border: 1.5px solid transparent;
+  box-shadow: 0 3px 8px rgba(255,209,0,0.35);
+}
+.pricing-plan-card-commercial .pricing-plan-demo:hover {
+  filter: brightness(1.06);
+  box-shadow: 0 8px 22px rgba(255,209,0,0.45);
+}
+
+/* ---------- Glow Accent (optional aesthetic enhancement) ---------- */
+.pricing-plan-card-commercial::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  padding: 1px;
+  background: linear-gradient(145deg, rgba(255,209,0,0.65), rgba(255,209,0,0.25));
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ---------- FIX: Grid layout spacing & centering ---------- */
+.pricing-div-main {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, max-content));
+  justify-content: center;
+  justify-items: center;
+  align-items: start;
+  gap: 2.5rem; /* controls space between cards */
+  width: 100%;
+  max-width: 1336px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* allow cards to size correctly inside the grid */
+.pricing-plan-card-starter,
+.pricing-plan-card-professional,
+.pricing-plan-card-commercial {
+  width: 100%;
+  max-width: 360px;
+}
+
+/* ---------- POP EFFECT for middle Professional card (refined) ---------- */
+.pricing-plan-card-professional {
+  transform: scale(1.05);
+  z-index: 2;
+  border: 2px solid rgba(3,183,216,0.95);
+  box-shadow:
+    0 0 18px rgba(3,183,216,0.18),
+    0 0 36px rgba(3,183,216,0.10);
+}
+
+/* Smooth hover without overwhelming glow */
+.pricing-plan-card-professional:hover {
+  transform: scale(1.06) translateY(-4px);
+  box-shadow:
+    0 0 25px rgba(3,183,216,0.25),
+    0 0 50px rgba(3,183,216,0.15);
+}
+
+
+/* ---------- ADD-ONS SECTION ---------- */
+.addons-section {
+  background: #f9fafb;
+  padding: 3rem 1rem 6rem;
+  text-align: center;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
+  color: var(--ink);
+}
+
+/* ---------- Heading & Subheading ---------- */
+.addons-heading {
+  font-size: 2rem;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+  color: #111827;
+}
+
+.addons-heading span {
+  color: #03b7d8;
+}
+
+.addons-subheading {
+  color: #6b7280;
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin: 0 auto 3rem;
+  line-height: 1.6;
+}
+
+/* ---------- Grid Layout ---------- */
+.addons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  justify-items: center;
+  align-items: stretch;
+}
+
+/* ---------- Individual Add-On Card ---------- */
+.addon-card {
+  background: var(--bg);
+  border: 1px solid #e5e7eb;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  padding: 2rem 1.5rem 2.2rem;
+  transition: transform 0.3s cubic-bezier(.2,.8,.2,1), box-shadow 0.3s cubic-bezier(.2,.8,.2,1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.addon-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(3,183,216,0.18);
+}
+
+/* ---------- Icon ---------- */
+.addon-icon {
+  width: 60px; /* reduced circle size */
+  height: 60px;
+  background: rgba(3,183,216,0.08);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.35rem; /* tightened gap below icon */
+  position: relative;
+}
+
+.addon-icon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(3,183,216,0.25), transparent 70%);
+  opacity: 0.8;
+  z-index: 0;
+}
+
+.addon-icon img {
+  width: 38px; /* scaled up to visually fill circle */
+  height: auto;
+  position: relative;
+  z-index: 1;
+  object-fit: contain;
+}
+
+/* ---------- Title ---------- */
+.addon-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 0.2rem;
+}
+
+/* ---------- Price ---------- */
+.addon-price {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #03b7d8;
+  margin-bottom: 0.75rem;
+}
+
+/* ---------- Description ---------- */
+.addon-desc {
+  color: #6b7280;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  max-width: 280px;
+}
+
+/* ---------- Responsive Tweaks ---------- */
+@media (max-width: 768px) {
+  .addons-section {
+    padding: 4rem 1.5rem;
+  }
+  .addons-grid {
+    gap: 2rem;
+  }
+  .addon-card {
+    padding: 1.75rem 1.25rem 2rem;
+  }
+  .addon-icon {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 0.3rem;
+  }
+  .addon-icon img {
+    width: 35px;
+  }
+  .addon-price {
+    font-size: 1.3rem;
+  }
+  .addon-desc {
+    max-width: 100%;
+  }
+}
+
+
+/* ---------- Design Tokens ---------- */
+:root {
+  --bg: #fff;
+  --ink: #0a0a0a;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --surface: #f7f7f8;
+  --surface-2: #fafafa;
+  --brand: #ffc400;
+  --brand-hover: #ffd84d;
+  --brand-ink: #111;
+  --shadow-sm: 0 2px 10px rgba(0,0,0,.05);
+  --shadow-md: 0 10px 30px rgba(0,0,0,.08);
+  --radius: 12px;
+  --radius-lg: 16px;
+}
+
+/* ---------- REFR PAY SECTION ---------- */
+.refrpay-section {
+  background: #fff;
+  padding: 3rem 1rem 6rem;
+  color: var(--ink);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
+}
+
+.refrpay-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* ---------- Heading ---------- */
+.refrpay-heading-wrap {
+  margin-bottom: 2.5rem; /* ✅ reduced gap under heading */
+}
+
+.refrpay-heading {
+  font-size: 3rem; /* ✅ larger title */
+  font-weight: 900;
+  line-height: 1.15;
+  color: #111827;
+  margin-bottom: 0.35rem; /* ✅ tighter spacing before subtitle */
+}
+
+.refrpay-subtext {
+  color: var(--muted);
+  font-size: 1.1rem;
+  margin-top: 0;
+}
+
+/* ---------- REFRPAY FEATURE CARD (Gold Variant of Addon-Card) ---------- */
+.refrpay-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto 5rem; /* ✅ Adds bottom padding before next section */
+  justify-items: center;
+  align-items: stretch;
+}
+
+
+.refrpay-feature-card {
+  background: var(--bg);
+  border: 1px solid #e5e7eb;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  padding: 2.5rem 1.75rem 2.75rem; /* ✅ restored original padding */
+  transition:
+    transform 0.35s cubic-bezier(.2,.8,.2,1),
+    box-shadow 0.35s cubic-bezier(.2,.8,.2,1),
+    border-color 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.refrpay-feature-card:hover {
+  transform: translateY(-8px);
+  border-color: #000; /* black hover border */
+  box-shadow: 0 14px 36px rgba(0,0,0,0.16);
+}
+
+
+
+.refrpay-feature-card:hover .refrpay-feature-icon {
+  box-shadow: 0 0 26px rgba(255, 230, 0, 0.8);
+  transition: box-shadow 0.25s ease-in-out;
+}
+
+
+
+/* ---------- Icon ---------- */
+.refrpay-feature-icon {
+  width: 64px;
+  height: 64px;
+  background: radial-gradient(circle at center, #ffe600 0%, #ffd100 40%, #ffcc00 80%); /* neon-bright gold gradient */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  position: relative;
+  box-shadow: 0 0 18px rgba(255, 230, 0, 0.6); /* subtle outer glow for brightness */
+}
+
+
+.refrpay-feature-icon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(255,209,0,0.25), transparent 70%);
+  opacity: 0.8;
+  z-index: 0;
+}
+
+.refrpay-feature-icon img {
+  width: 38px;
+  height: auto;
+  position: relative;
+  z-index: 1;
+  object-fit: contain;
+}
+
+
+/* ---------- Title ---------- */
+.refrpay-feature-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 0.8rem !important; /* increased from 0.2rem */
+}
+
+
+/* ---------- Accent Text (Price / Key Highlight) ---------- */
+.refrpay-feature-price {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #ffd100;
+  margin-bottom: 0.75rem;
+}
+
+/* ---------- Description ---------- */
+
+.refrpay-feature-desc {
+  color: #6b7280;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  max-width: 280px;
+  margin-top: 0.8rem !important; /* adds more space above desc */
+}
+
+
+/* ---------- Responsive Tweaks ---------- */
+@media (max-width: 768px) {
+  .refrpay-feature-grid {
+    gap: 2rem;
+  }
+  .refrpay-feature-card {
+    padding: 1.75rem 1.25rem 2rem;
+  }
+  .refrpay-feature-icon {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 0.3rem;
+  }
+  .refrpay-feature-icon img {
+    width: 35px;
+  }
+  .refrpay-feature-price {
+    font-size: 1.3rem;
+  }
+  .refrpay-feature-desc {
+    max-width: 100%;
+  }
+}
+
+
+
+/* ---------- PAYOUTS SECTION ---------- */
+.refrpay-payouts {
+  background: #0a0a0a;
+  color: #fff;
+  border-radius: var(--radius-lg);
+  padding: 3rem 1.5rem 3.75rem; /* ✅ less top padding */
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+
+.refrpay-payouts-heading {
+  font-size: 2rem; /* ✅ larger heading */
+  font-weight: 900;
+  line-height: 1.2;
+  margin: 0 auto 3rem; /* ✅ more space below heading before steps */
+  color: #fff;
+}
+
+/* ---------- Payout Steps ---------- */
+.refrpay-payouts-steps-row {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem 4rem;
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  align-items: start;
+  justify-items: center;
+  text-align: center;
+}
+
+.refrpay-payouts-steps {
+  width: 100%;
+  max-width: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0 !important;
+  text-align: center;
+}
+
+/* ---------- Step Circle ---------- */
+.refrpay-step-num {
+  background: var(--brand);
+  color: #111;
+  font-weight: 900;
+  font-size: 1.1rem;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 1rem 0;
+  box-shadow: 0 0 22px rgba(255,196,0,.35);
+}
+
+/* ---------- Step Text ---------- */
+.refrpay-step-title {
+  font-weight: 800;
+  font-size: 1.1rem; /* ✅ slightly larger titles */
+  margin: 0 0 .4rem 0;
+}
+
+.refrpay-step-desc {
+  color: #d1d5db;
+  font-size: .96rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ---------- Pulse Animation ---------- */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 rgba(255,196,0,0); }
+  50% { transform: scale(1.05); box-shadow: 0 0 15px rgba(255,196,0,0.35); }
+}
+.refrpay-step-num {
+  animation: pulse 3s infinite;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .refrpay-heading {
+    font-size: 2.4rem;
+  }
+
+  .refrpay-payouts-heading {
+    font-size: 1.7rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .refrpay-payouts-steps-row {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: 520px;
+  }
+}
+
+/* ---------- ORGANIZATION PAYMENT SECTION ---------- */
+.orgpayment-section {
+  background: #f9fafb;
+  padding: 3rem 1rem 6rem;
+  color: #111827;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.orgpayment-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* ---------- Heading ---------- */
+.orgpayment-heading-wrap {
+  margin-bottom: 3.5rem;
+}
+
+.orgpayment-heading {
+  font-size: 2.25rem;
+  font-weight: 900;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.orgpayment-subtext {
+  color: #6b7280;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+/* ---------- Options Grid ---------- */
+.orgpayment-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 2.5rem;
+  margin-bottom: 3rem;
+  justify-items: center;
+}
+
+/* ---------- Option Card ---------- */
+.orgpayment-option-card {
+  position: relative;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
+  padding: 2.5rem 2rem;
+  text-align: left;
+  width: 100%;
+  max-width: 520px;
+  transition: transform 0.3s cubic-bezier(.2, .8, .2, 1), box-shadow 0.3s ease;
+  background: linear-gradient(145deg, #f9feff 0%, #fff 80%);
+}
+
+.orgpayment-option-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(3, 183, 216, 0.12);
+}
+
+/* ---------- Icon ---------- */
+.orgpayment-option-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(3, 183, 216, 0.08);
+  margin-bottom: 1.25rem;
+}
+
+.orgpayment-option-icon img {
+  width: 30px;
+  height: auto;
+}
+
+/* ---------- Badge ---------- */
+.orgpayment-option-badge {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: linear-gradient(90deg, #00c4e6, #03b7d8);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.3rem 0.9rem;
+  border-radius: 50px;
+  box-shadow: 0 2px 8px rgba(3, 183, 216, 0.35);
+}
+
+/* ---------- Title, Fee, Description ---------- */
+.orgpayment-option-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.orgpayment-option-fee {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: #03b7d8;
+  margin-bottom: 0.75rem;
+}
+
+.orgpayment-option-desc {
+  color: #6b7280;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1.1rem;
+}
+
+/* ---------- Option List & Items ---------- */
+.orgpayment-option-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.orgpayment-option-item {
+  font-size: 0.96rem;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.orgpayment-option-item::before {
+  content: "";
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.45rem;
+  background: no-repeat center center / contain;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%2303b7d8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+}
+
+
+
+/* ---------- SECURITY SECTION ---------- */
+.orgpayment-security {
+  background: linear-gradient(90deg, #0a0a0a, #1a1a1a);
+  color: #fff;
+  border-radius: 16px;
+  padding: 1.75rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  text-align: left;
+}
+
+/* Left Side (icon + text) */
+.orgpayment-security-left {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  flex: 1 1 auto;
+  text-align: left;
+}
+
+.orgpayment-security-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(3, 183, 216, 0.08);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.orgpayment-security-icon img {
+  width: 26px;
+  height: auto;
+  opacity: 0.9;
+}
+
+/* Text content next to icon */
+.orgpayment-security-text-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.orgpayment-security-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.2;
+  margin: 0 0 2px 0;
+}
+
+.orgpayment-security-desc {
+  color: #d1d5db;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* Right Side (Stripe badge) */
+.orgpayment-security-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- STRIPE BADGE FIX ---------- */
+.orgpayment-stripe-badge {
+  background: rgba(3, 183, 216, 0.12);
+  border: 1px solid rgba(3, 183, 216, 0.3);
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  color: #03b7d8;
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  max-height: 48px;
+}
+
+/* Limit logo size inside badge */
+.orgpayment-stripe-badge img {
+  max-width: 90px;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 0 4px rgba(3,183,216,0.25));
+}
+
+/* ---------- FOOTER ---------- */
+.orgpayment-footer {
+  text-align: center;
+  margin-top: 2.5rem;
+}
+
+.orgpayment-footer-text {
+  font-weight: 700;
+  color: #111827;
+  font-size: 1.05rem;
+  margin-bottom: 1rem;
+}
+
+.orgpayment-footer-button {
+  background: #ffc400;
+  color: #111;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 1rem 2.25rem;
+  border-radius: 10px;
+  display: inline-block;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 4px 12px rgba(255,196,0,0.25);
+}
+
+.orgpayment-footer-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(255,196,0,0.35);
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 900px) {
+  .orgpayment-heading {
+    font-size: 1.85rem;
+  }
+
+  .orgpayment-options-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .orgpayment-security {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .orgpayment-security-left {
+    justify-content: flex-start;
+  }
+
+  .orgpayment-security-right {
+    margin-left: 0;
+    justify-content: center;
+  }
+
+  .orgpayment-footer-button {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+/* ---------- PRICING HERO SECTION ---------- */
+.pricing-hero-section {
+  position: relative;
+  background: #000;
+  color: #fff;
+  text-align: center;
+  padding: 3rem 1rem 3rem; /* reduced top padding from 8rem → 6rem */
+  overflow: hidden;
+}
+
+/* Bottom gradient fade into white */
+.pricing-hero-section::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #fff 100%);
+  pointer-events: none;
+}
+
+/* ---------- Container ---------- */
+.pricing-hero-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------- Heading ---------- */
+.pricing-hero-heading-wrap {
+  margin-bottom: 1.5rem;
+}
+
+.pricing-hero-heading {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  color: #fff;
+  position: relative;
+}
+
+/* Add color emphasis dynamically to "Zero Upcharge" */
+.pricing-hero-heading::after {
+  content: " Zero Upcharge.";
+  color: #ffcc00;
+  text-shadow: 0 0 10px rgba(255, 204, 0, 0.3);
+}
+
+/* ---------- Subtext ---------- */
+.pricing-hero-subtext {
+  font-size: 1.15rem;
+  color: #cfd1d4;
+  max-width: 680px;
+  margin: 0 auto 1.5rem;
+  line-height: 1.6;
+}
+
+/* ---------- Trusted Text ---------- */
+.pricing-hero-trust-text {
+  font-size: 0.95rem;
+  color: #9ca3af;
+  margin-bottom: 2.5rem;
+}
+
+/* ---------- CTA Buttons ---------- */
+.pricing-hero-cta-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.pricing-hero-button-yellow,
+.pricing-hero-button-blue {
+  display: inline-block;
+  padding: 0.9rem 2rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: all 0.25s ease;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Yellow Button */
+.pricing-hero-button-yellow {
+  background: #ffcc00;
+  color: #000;
+  box-shadow: 0 4px 10px rgba(255, 196, 0, 0.3);
+}
+.pricing-hero-button-yellow:hover {
+  background: #ffdb33;
+  transform: translateY(-2px);
+}
+
+/* Blue Button */
+.pricing-hero-button-blue {
+  background: #03b7d8;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(3, 183, 216, 0.3);
+}
+.pricing-hero-button-blue:hover {
+  background: #05c4e8;
+  transform: translateY(-2px);
+}
+
+/* ---------- Footnote ---------- */
+.pricing-hero-footnote {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  margin-top: 0.75rem;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 900px) {
+  .pricing-hero-heading {
+    font-size: 2.25rem;
+  }
+
+  .pricing-hero-subtext {
+    font-size: 1rem;
+  }
+
+  .pricing-hero-cta-wrap {
+    flex-direction: column;
+  }
+
+  .pricing-hero-button-yellow,
+  .pricing-hero-button-blue {
+    width: 100%;
+    max-width: 260px;
+  }
+}
+
+/* ---------- FOOTER CTA SECTION ---------- */
+.footer-cta-section {
+  background: #000;
+  color: #fff;
+  text-align: center;
+  padding: 3rem 1rem 5rem;
+}
+
+.footer-cta-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------- Heading + Subtext ---------- */
+.footer-cta-heading-wrap {
+  margin-bottom: 2.5rem;
+}
+
+.footer-cta-heading {
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: #ffd100;
+  line-height: 1.25;
+}
+
+.footer-cta-subtext {
+  color: #cfd1d4;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* ---------- Buttons ---------- */
+.footer-cta-buttons-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.footer-cta-button-yellow,
+.footer-cta-button-blue {
+  display: inline-block;
+  padding: 0.9rem 2rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: all 0.25s ease;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Yellow Button */
+.footer-cta-button-yellow {
+  background: #ffcc00;
+  color: #000;
+  box-shadow: 0 4px 10px rgba(255, 196, 0, 0.3);
+}
+.footer-cta-button-yellow:hover {
+  background: #ffdb33;
+  transform: translateY(-2px);
+}
+
+/* Blue Button */
+.footer-cta-button-blue {
+  background: #03b7d8;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(3, 183, 216, 0.3);
+}
+.footer-cta-button-blue:hover {
+  background: #05c4e8;
+  transform: translateY(-2px);
+}
+
+/* ---------- Trust Text ---------- */
+.footer-cta-trust-text {
+  font-size: 0.9rem;
+  color: #9ca3af;
+  margin-top: 0.75rem;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 900px) {
+  .footer-cta-heading {
+    font-size: 1.9rem;
+  }
+
+  .footer-cta-buttons-wrap {
+    flex-direction: column;
+  }
+
+  .footer-cta-button-yellow,
+  .footer-cta-button-blue {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+
+
+/* ---------- RESPONSIVE SPACING FOR STACKED PRICING CARDS ---------- */
+@media (max-width: 991px) {
+  .pricing-div-main {
+    gap: 4rem; /* adds more vertical space between stacked cards */
+  }
+
+  /* ensure consistent vertical spacing even if layout changes */
+  .pricing-plan-card-starter,
+  .pricing-plan-card-professional,
+  .pricing-plan-card-commercial {
+    margin-bottom: 2.5rem;
+  }
+
+  /* remove bottom margin on last card */
+  .pricing-plan-card-commercial {
+    margin-bottom: 0;
+  }
+}
+
+
+/* --- Fix Stripe badge placement on tablets/phones (≤991px) --- */
+@media (max-width: 991px) {
+  .orgpayment-security {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .orgpayment-security-left {
+    width: 100%;
+  }
+
+  .orgpayment-security-right {
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-start;   /* left align the badge */
+  }
+
+  .orgpayment-stripe-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.9rem;
+    border-radius: 8px;
+    margin-top: 0.5rem;            /* space below the text block */
+    max-height: none;              /* let it size naturally */
+  }
+
+  .orgpayment-stripe-badge img {
+    max-width: 80px;               /* prevent oversized logo */
+    height: auto;
+  }
+}
+
+/* ============================
+   BLACK FRIDAY 50% OFF STYLING
+   ============================ */
+
+/* Shiny Black Friday badge on all three cards */
+.pricing-plan-card-starter::after,
+.pricing-plan-card-professional::after,
+.pricing-plan-card-commercial::after {
+  content: "Black Friday · 50% OFF";
+  position: absolute;
+  top: -0.9rem;
+  right: 1.1rem;
+  padding: 0.25rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  background: linear-gradient(120deg, #111, #ffd100, #111);
+  background-size: 220% 220%;
+  color: #fefce8;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.6),
+    0 0 12px rgba(255, 209, 0, 0.45);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  z-index: 3;
+  animation: bfBadgeSweep 5s linear infinite;
+}
+
+/* Little sparkle */
+.pricing-plan-card-starter::after::before,
+.pricing-plan-card-professional::after::before,
+.pricing-plan-card-commercial::after::before {
+  content: "✦";
+  font-size: 0.75em;
+}
+
+/* slow shimmering gradient in the badge */
+@keyframes bfBadgeSweep {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 120% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ----- Discounted price layout ----- */
+.pricing-plan-price {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 0.45rem;
+}
+
+/* Original price (struck through, muted) */
+.pricing-price-original {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #9ca3af;
+  text-decoration: line-through;
+  opacity: 0.9;
+  transform: translateY(-3px);
+}
+
+/* Discount price (gold, shiny) */
+.pricing-price-discount {
+  font-size: 2.6rem;
+  font-weight: 900;
+  line-height: 1.1;
+  background: linear-gradient(120deg, #ffd100, #fff4b0, #ffb700);
+  -webkit-background-clip: text;
+  color: transparent;
+  text-shadow:
+    0 0 12px rgba(255, 204, 0, 0.7),
+    0 0 26px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.01em;
+}
+
+/* Make sure the middle “featured” card still pops */
+.pricing-plan-card-professional .pricing-price-discount {
+  text-shadow:
+    0 0 14px rgba(3, 183, 216, 0.4),
+    0 0 26px rgba(0, 0, 0, 0.9);
+}
+
+/* Price note becomes a small Black Friday message */
+.pricing-plan-price-note {
+  color: #facc15;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 0.35rem;
+}
+
+/* Annual total row styling to emphasise BF savings text */
+.pricing-plan-annual-total .pricing-plan-totals-value.highlight {
+  background: linear-gradient(120deg, #ffd100, #ffb700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* On small screens, scale down the price pair a bit */
+@media (max-width: 420px) {
+  .pricing-price-discount {
+    font-size: 2.2rem;
+  }
+  .pricing-price-original {
+    font-size: 0.85rem;
+  }
+}
