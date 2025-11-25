@@ -1765,19 +1765,31 @@
   }
 }
 
+<style>
 /* ============================
    BLACK FRIDAY 50% OFF STYLING
    ============================ */
 
-/* Shiny Black Friday badge on all three cards */
+/* Kill the old card-top ribbons if they’re still there */
 .pricing-plan-card-starter::after,
 .pricing-plan-card-professional::after,
 .pricing-plan-card-commercial::after {
+  content: none !important;
+}
+
+/* --- Inline Black Friday pill next to plan name --- */
+.pricing-plan-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pricing-plan-name::after {
   content: "Black Friday · 50% OFF";
-  position: absolute;
-  top: -0.9rem;
-  right: 1.1rem;
-  padding: 0.25rem 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.15rem 0.7rem;
   border-radius: 999px;
   font-size: 0.7rem;
   font-weight: 800;
@@ -1788,25 +1800,24 @@
   color: #fefce8;
   border: 1px solid rgba(255, 255, 255, 0.26);
   box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.6),
+    0 2px 6px rgba(0, 0, 0, 0.55),
     0 0 12px rgba(255, 209, 0, 0.45);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.25rem;
-  z-index: 3;
+  gap: 0.2rem;
+  white-space: nowrap;
   animation: bfBadgeSweep 5s linear infinite;
 }
 
-/* Little sparkle */
-.pricing-plan-card-starter::after::before,
-.pricing-plan-card-professional::after::before,
-.pricing-plan-card-commercial::after::before {
+.pricing-plan-name::before {
+  content: "";
+}
+
+/* Little sparkle inside the pill */
+.pricing-plan-name::after::before {
   content: "✦";
   font-size: 0.75em;
 }
 
-/* slow shimmering gradient in the badge */
+/* slow shimmering gradient in the pill */
 @keyframes bfBadgeSweep {
   0%   { background-position: 0% 50%; }
   50%  { background-position: 120% 50%; }
@@ -1830,7 +1841,7 @@
   transform: translateY(-3px);
 }
 
-/* Discount price (gold, shiny) */
+/* Discount price (warm gold, unified glow) */
 .pricing-price-discount {
   font-size: 2.6rem;
   font-weight: 900;
@@ -1839,19 +1850,19 @@
   -webkit-background-clip: text;
   color: transparent;
   text-shadow:
-    0 0 12px rgba(255, 204, 0, 0.7),
-    0 0 26px rgba(0, 0, 0, 0.8);
+    0 0 18px rgba(0, 0, 0, 0.55),
+    0 0 32px rgba(255, 209, 0, 0.65);
   letter-spacing: 0.01em;
 }
 
-/* Make sure the middle “featured” card still pops */
+/* remove any per-card overrides so all 3 look the same */
 .pricing-plan-card-professional .pricing-price-discount {
   text-shadow:
-    0 0 14px rgba(3, 183, 216, 0.4),
-    0 0 26px rgba(0, 0, 0, 0.9);
+    0 0 18px rgba(0, 0, 0, 0.55),
+    0 0 32px rgba(255, 209, 0, 0.65);
 }
 
-/* Price note becomes a small Black Friday message */
+/* Price note = subtle BF copy */
 .pricing-plan-price-note {
   color: #facc15;
   font-size: 0.9rem;
@@ -1859,14 +1870,14 @@
   margin-top: 0.35rem;
 }
 
-/* Annual total row styling to emphasise BF savings text */
+/* Annual total row highlight */
 .pricing-plan-annual-total .pricing-plan-totals-value.highlight {
   background: linear-gradient(120deg, #ffd100, #ffb700);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* On small screens, scale down the price pair a bit */
+/* Small screens */
 @media (max-width: 420px) {
   .pricing-price-discount {
     font-size: 2.2rem;
@@ -1874,4 +1885,11 @@
   .pricing-price-original {
     font-size: 0.85rem;
   }
+
+  .pricing-plan-name::after {
+    font-size: 0.65rem;
+    padding: 0.12rem 0.55rem;
+  }
 }
+</style>
+
