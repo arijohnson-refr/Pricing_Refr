@@ -1,7 +1,7 @@
 // Refr Sports
 
 document.addEventListener('DOMContentLoaded', () => {
-  const DISCOUNT_RATE = 0.65; // 35% off (customer pays 65% of original)
+  const DISCOUNT_RATE = 0.65;
 
   const formatCurrency = (value) => {
     const hasDecimals = Math.round(value * 100) !== value * 100;
