@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setRow(additionalCost, 'Additional cost (pre-discount):', '+$0');
     setRow(
       annualTotal,
-      'Discounted total:',
+      'Total:',
       `$${formatCurrency(defaultDiscountedTotal)} (was $${formatCurrency(defaultOriginalTotal)})`,
       true,
       true
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         );
         setRow(
           annualTotal,
-          'Discounted total:',
+          'Total:',
           `$${formatCurrency(discountedTotalCost)} (was $${formatCurrency(originalTotalCost)})`,
           true,
           true
