@@ -1,0 +1,190 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const DISCOUNT_RATE = 0.5; // 50% off
+
+  // format money nicely, keeping .00 or .50 when needed
+  const formatCurrency = (value) => {
+    const hasDecimals = Math.round(value * 100) !== value * 100;
+    return value.toLocaleString(undefined, {
+      minimumFractionDigits: hasDecimals ? 2 : 0,
+      maximumFractionDigits: 2
+    });
+  };
+
+  // Define pricing logic for all tiers (original, pre-discount prices)
+  const plans = [
+    {
+      className: 'pricing-plan-card-starter',
+      basePrice: 250,
+      included: 200,
+      extraPrice: 1.25
+    },
+    {
+      className: 'pricing-plan-card-professional',
+      basePrice: 750,
+      included: 1000,
+      extraPrice: 0.75
+    },
+    {
+      className: 'pricing-plan-card-commercial',
+      basePrice: 2500,
+      included: 5000,
+      extraPrice: 0.50
+    }
+  ];
+
+  plans.forEach(plan => {
+    const card = document.querySelector(`.${plan.className}`);
+    if (!card) return;
+
+    const dropdown = card.querySelector('.pricing-plan-dropdown');
+    const dropdownToggle = dropdown.querySelector('.w-dropdown-toggle');
+    const dropdownList = dropdown.querySelector('.w-dropdown-list');
+    const dropdownLinks = dropdownList.querySelectorAll('a');
+    const priceHeader = card.querySelector('.pricing-plan-price');
+    const toggleLabel = dropdown.querySelector('.pricing-plan-dropdown-text');
+    const priceNote = card.querySelector('.pricing-plan-price-note');
+
+    const includedGames = card.querySelector('.pricing-plan-included-games');
+    const extraGames = card.querySelector('.pricing-plan-extra-games');
+    const totalGames = card.querySelector('.pricing-plan-total-games');
+    const basePrice = card.querySelector('.pricing-plan-base-price');
+    const additionalCost = card.querySelector('.pricing-plan-additional-cost');
+    const annualTotal = card.querySelector('.pricing-plan-annual-total');
+    const effectiveCost = card.querySelector('.pricing-plan-effective-cost');
+
+    // Utility
+    const setRow = (el, label, value, highlight = false, divider = false) => {
+      if (!el) return;
+      el.innerHTML = `
+        <span class="pricing-plan-totals-label">${label}</span>
+        <span class="pricing-plan-totals-value ${highlight ? 'highlight' : ''}">${value}</span>
+      `;
+      if (divider) el.classList.add('divider');
+    };
+
+    const flash = (el) => {
+      if (!el) return;
+      el.classList.add('changed');
+      setTimeout(() => el.classList.remove('changed'), 650);
+    };
+
+    const setPriceHeader = (originalTotal, discountedTotal) => {
+      if (!priceHeader) return;
+      priceHeader.innerHTML = `
+        <span class="pricing-price-original">$${formatCurrency(originalTotal)}</span>
+        <span class="pricing-price-discount">$${formatCurrency(discountedTotal)}</span>
+      `;
+    };
+
+    // ---------- Default setup (0 extra games) ----------
+    const defaultOption = dropdown.querySelector('a[data-extra-games="0"]') || dropdownLinks[0];
+    if (defaultOption) toggleLabel.textContent = defaultOption.textContent.trim();
+
+    const defaultOriginalTotal = plan.basePrice;
+    const defaultDiscountedTotal = defaultOriginalTotal * DISCOUNT_RATE;
+
+    setPriceHeader(defaultOriginalTotal, defaultDiscountedTotal);
+
+    if (priceNote) {
+      priceNote.textContent =
+        `Black Friday 50% off – was $${formatCurrency(defaultOriginalTotal)}, now $${formatCurrency(defaultDiscountedTotal)}.`;
+    }
+
+    setRow(includedGames, 'Included games:', plan.included.toLocaleString());
+    setRow(extraGames, 'Extra games:', '+0');
+    setRow(totalGames, 'Total games:', plan.included.toLocaleString(), true);
+    setRow(basePrice, 'Base price (pre-discount):', `$${formatCurrency(plan.basePrice)}`);
+    setRow(additionalCost, 'Additional cost (pre-discount):', '+$0');
+    setRow(
+      annualTotal,
+      'Black Friday annual total:',
+      `$${formatCurrency(defaultDiscountedTotal)} (was $${formatCurrency(defaultOriginalTotal)})`,
+      true,
+      true
+    );
+    setRow(
+      effectiveCost,
+      'Effective cost per game (BF):',
+      `$${(defaultDiscountedTotal / plan.included).toFixed(2)}`
+    );
+
+    // ---------- Toggle dropdown ----------
+    dropdownToggle.addEventListener('click', e => {
+      e.preventDefault();
+      dropdown.classList.toggle('w--open');
+      dropdownList.style.display = dropdown.classList.contains('w--open') ? 'block' : 'none';
+    });
+
+    // ---------- Update logic on selection ----------
+    dropdownLinks.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+
+        const extra = parseInt(link.getAttribute('data-extra-games')) || 0;
+        const totalExtraCost = extra * plan.extraPrice;
+
+        // original totals (pre-discount)
+        const originalTotalCost = plan.basePrice + totalExtraCost;
+        const totalGameCount = plan.included + extra;
+
+        // Black Friday discounted totals
+        const discountedTotalCost = originalTotalCost * DISCOUNT_RATE;
+        const costPerGame = (discountedTotalCost / totalGameCount).toFixed(2);
+
+        // formatted numbers
+        const includedFormatted = plan.included.toLocaleString();
+        const extraFormatted = `+${extra.toLocaleString()}`;
+        const totalFormatted = totalGameCount.toLocaleString();
+
+        // Update table
+        setRow(includedGames, 'Included games:', includedFormatted);
+        setRow(extraGames, 'Extra games:', extraFormatted);
+        setRow(totalGames, 'Total games:', totalFormatted, true);
+        setRow(basePrice, 'Base price (pre-discount):', `$${formatCurrency(plan.basePrice)}`);
+        setRow(
+          additionalCost,
+          'Additional cost (pre-discount):',
+          `+$${formatCurrency(totalExtraCost)}`
+        );
+        setRow(
+          annualTotal,
+          'Black Friday annual total:',
+          `$${formatCurrency(discountedTotalCost)} (was $${formatCurrency(originalTotalCost)})`,
+          true,
+          true
+        );
+        setRow(
+          effectiveCost,
+          'Effective cost per game (BF):',
+          `$${costPerGame}`
+        );
+
+        // Update header price + label text
+        setPriceHeader(originalTotalCost, discountedTotalCost);
+        toggleLabel.textContent = link.textContent.trim();
+
+        if (priceNote) {
+          priceNote.textContent =
+            `Black Friday 50% off – was $${formatCurrency(originalTotalCost)}, now $${formatCurrency(discountedTotalCost)} for ${totalFormatted} games.`;
+        }
+
+        // flash key rows
+        flash(priceHeader);
+        flash(annualTotal);
+        flash(totalGames);
+        flash(additionalCost);
+
+        dropdown.classList.remove('w--open');
+        dropdownList.style.display = 'none';
+      });
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', e => {
+      if (!dropdown.contains(e.target)) {
+        dropdown.classList.remove('w--open');
+        dropdownList.style.display = 'none';
+      }
+    });
+  });
+});
