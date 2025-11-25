@@ -1,7 +1,7 @@
+<script>
 document.addEventListener('DOMContentLoaded', () => {
   const DISCOUNT_RATE = 0.5; // 50% off
 
-  // format money nicely, keeping .00 or .50 when needed
   const formatCurrency = (value) => {
     const hasDecimals = Math.round(value * 100) !== value * 100;
     return value.toLocaleString(undefined, {
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  // Define pricing logic for all tiers (original, pre-discount prices)
+  // Original (pre-discount) pricing
   const plans = [
     {
       className: 'pricing-plan-card-starter',
@@ -52,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const annualTotal = card.querySelector('.pricing-plan-annual-total');
     const effectiveCost = card.querySelector('.pricing-plan-effective-cost');
 
-    // Utility
     const setRow = (el, label, value, highlight = false, divider = false) => {
       if (!el) return;
       el.innerHTML = `
@@ -97,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setRow(additionalCost, 'Additional cost (pre-discount):', '+$0');
     setRow(
       annualTotal,
-      'Black Friday annual total:',
+      'Discounted total:',
       `$${formatCurrency(defaultDiscountedTotal)} (was $${formatCurrency(defaultOriginalTotal)})`,
       true,
       true
@@ -127,16 +126,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const originalTotalCost = plan.basePrice + totalExtraCost;
         const totalGameCount = plan.included + extra;
 
-        // Black Friday discounted totals
+        // discounted totals
         const discountedTotalCost = originalTotalCost * DISCOUNT_RATE;
         const costPerGame = (discountedTotalCost / totalGameCount).toFixed(2);
 
-        // formatted numbers
         const includedFormatted = plan.included.toLocaleString();
         const extraFormatted = `+${extra.toLocaleString()}`;
         const totalFormatted = totalGameCount.toLocaleString();
 
-        // Update table
         setRow(includedGames, 'Included games:', includedFormatted);
         setRow(extraGames, 'Extra games:', extraFormatted);
         setRow(totalGames, 'Total games:', totalFormatted, true);
@@ -148,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
         );
         setRow(
           annualTotal,
-          'Black Friday annual total:',
+          'Discounted total:',
           `$${formatCurrency(discountedTotalCost)} (was $${formatCurrency(originalTotalCost)})`,
           true,
           true
@@ -159,7 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
           `$${costPerGame}`
         );
 
-        // Update header price + label text
         setPriceHeader(originalTotalCost, discountedTotalCost);
         toggleLabel.textContent = link.textContent.trim();
 
@@ -168,7 +164,6 @@ document.addEventListener('DOMContentLoaded', () => {
             `Black Friday 50% off – was $${formatCurrency(originalTotalCost)}, now $${formatCurrency(discountedTotalCost)} for ${totalFormatted} games.`;
         }
 
-        // flash key rows
         flash(priceHeader);
         flash(annualTotal);
         flash(totalGames);
@@ -188,3 +183,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+</script>
