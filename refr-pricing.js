@@ -1,7 +1,7 @@
-  // Refr Sports
+// Refr Sports
 
 document.addEventListener('DOMContentLoaded', () => {
-  const DISCOUNT_RATE = 0.5; // 50% off
+  const DISCOUNT_RATE = 0.65; // 35% off (customer pays 65% of original)
 
   const formatCurrency = (value) => {
     const hasDecimals = Math.round(value * 100) !== value * 100;
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (priceNote) {
       priceNote.textContent =
-        `Black Friday 50% off – was $${formatCurrency(defaultOriginalTotal)}, now $${formatCurrency(defaultDiscountedTotal)}.`;
+        `Black Friday 35% off – was $${formatCurrency(defaultOriginalTotal)}, now $${formatCurrency(defaultDiscountedTotal)}.`;
     }
 
     setRow(includedGames, 'Included games:', plan.included.toLocaleString());
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (priceNote) {
           priceNote.textContent =
-            `Black Friday 50% off – was $${formatCurrency(originalTotalCost)}, now $${formatCurrency(discountedTotalCost)} for ${totalFormatted} games.`;
+            `Black Friday 35% off – was $${formatCurrency(originalTotalCost)}, now $${formatCurrency(discountedTotalCost)} for ${totalFormatted} games.`;
         }
 
         flash(priceHeader);
