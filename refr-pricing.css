@@ -432,6 +432,12 @@
   transition-delay: 0.05s;
 }
 
+/* Make promo-inner text GOLD so it shows on dark background */
+.promo-inner,
+.promo-inner * {
+  color: #ffd100 !important; /* premium gold */
+  text-shadow: 0 0 4px rgba(0,0,0,0.45); /* subtle definition on bright backgrounds */
+}
 
 
 
