@@ -1,6 +1,5 @@
   // Refr Sports
 
-<script>
 document.addEventListener('DOMContentLoaded', () => {
   const DISCOUNT_RATE = 0.5; // 50% off
 
@@ -185,4 +184,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
-</script>
