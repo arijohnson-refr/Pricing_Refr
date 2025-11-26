@@ -1,11 +1,10 @@
 // Refr Sports
 
 document.addEventListener('DOMContentLoaded', () => {
-  const DISCOUNT_RATE = 0.65; // 35% off
-  const MONTHS_IN_YEAR = 12;
+  const DISCOUNT_RATE = 0.65;
 
+  // ✅ Updated: always show 2 decimals when there are cents (e.g. 0.50, 1.20)
   const formatCurrency = (value) => {
-    // Normalize to 2 decimal places to avoid float weirdness
     const rounded = Math.round(value * 100) / 100;
     const isWhole = Number.isInteger(rounded);
 
@@ -15,9 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  const formatMoney = (value) => `$${formatCurrency(value)}`;
-
-  // Original (pre-discount) annual pricing
+  // Original (pre-discount) pricing
   const plans = [
     {
       className: 'pricing-plan-card-starter',
@@ -74,15 +71,16 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => el.classList.remove('changed'), 650);
     };
 
-    const setPriceHeader = (originalAnnual, discountedAnnual) => {
+    // ✅ Updated: display monthly price (annual ÷ 12) in the top header
+    const setPriceHeader = (originalTotal, discountedTotal) => {
       if (!priceHeader) return;
 
-      const originalMonthly = originalAnnual / MONTHS_IN_YEAR;
-      const discountedMonthly = discountedAnnual / MONTHS_IN_YEAR;
+      const originalMonthly = originalTotal / 12;
+      const discountedMonthly = discountedTotal / 12;
 
       priceHeader.innerHTML = `
-        <span class="pricing-price-original">${formatMoney(originalMonthly)}/mo</span>
-        <span class="pricing-price-discount">${formatMoney(discountedMonthly)}/mo</span>
+        <span class="pricing-price-original">$${formatCurrency(originalMonthly)}</span>
+        <span class="pricing-price-discount">$${formatCurrency(discountedMonthly)}</span>
       `;
     };
 
@@ -90,46 +88,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const defaultOption = dropdown.querySelector('a[data-extra-games="0"]') || dropdownLinks[0];
     if (defaultOption) toggleLabel.textContent = defaultOption.textContent.trim();
 
-    const defaultOriginalAnnual = plan.basePrice;
-    const defaultDiscountedAnnual = defaultOriginalAnnual * DISCOUNT_RATE;
+    const defaultOriginalTotal = plan.basePrice;
+    const defaultDiscountedTotal = defaultOriginalTotal * DISCOUNT_RATE;
 
-    const defaultOriginalMonthly = defaultOriginalAnnual / MONTHS_IN_YEAR;
-    const defaultDiscountedMonthly = defaultDiscountedAnnual / MONTHS_IN_YEAR;
-
-    setPriceHeader(defaultOriginalAnnual, defaultDiscountedAnnual);
+    setPriceHeader(defaultOriginalTotal, defaultDiscountedTotal);
 
     if (priceNote) {
       priceNote.textContent =
-        `Black Friday 35% off – was ${formatMoney(defaultOriginalMonthly)}/mo, now ${formatMoney(defaultDiscountedMonthly)}/mo.`;
+        `Black Friday 35% off – was $${formatCurrency(defaultOriginalTotal)}, now $${formatCurrency(defaultDiscountedTotal)}.`;
     }
 
     setRow(includedGames, 'Included games:', plan.included.toLocaleString());
     setRow(extraGames, 'Extra games:', '+0');
     setRow(totalGames, 'Total games:', plan.included.toLocaleString(), true);
-
-    setRow(
-      basePrice,
-      'Base price (pre-discount, per month):',
-      `${formatMoney(defaultOriginalMonthly)}/mo`
-    );
-    setRow(
-      additionalCost,
-      'Additional cost (pre-discount, per month):',
-      '+$0/mo'
-    );
+    setRow(basePrice, 'Base price (pre-discount):', `$${formatCurrency(plan.basePrice)}`);
+    setRow(additionalCost, 'Additional cost (pre-discount):', '+$0');
     setRow(
       annualTotal,
-      'Total per month:',
-      `${formatMoney(defaultDiscountedMonthly)}/mo (was ${formatMoney(defaultOriginalMonthly)}/mo)`,
+      'Total:',
+      `$${formatCurrency(defaultDiscountedTotal)} (was $${formatCurrency(defaultOriginalTotal)})`,
       true,
       true
     );
-
-    const defaultCostPerGameMonthly = defaultDiscountedMonthly / plan.included;
     setRow(
       effectiveCost,
-      'Effective cost per game (BF, per month):',
-      formatMoney(defaultCostPerGameMonthly)
+      'Effective cost per game (BF):',
+      `$${(defaultDiscountedTotal / plan.included).toFixed(2)}`
     );
 
     // ---------- Toggle dropdown ----------
@@ -145,19 +129,15 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         const extra = parseInt(link.getAttribute('data-extra-games')) || 0;
+        const totalExtraCost = extra * plan.extraPrice;
 
-        // Annual math (source of truth)
-        const totalExtraCostAnnual = extra * plan.extraPrice;
-        const originalAnnualTotal = plan.basePrice + totalExtraCostAnnual;
-        const discountedAnnualTotal = originalAnnualTotal * DISCOUNT_RATE;
+        // original totals (pre-discount)
+        const originalTotalCost = plan.basePrice + totalExtraCost;
         const totalGameCount = plan.included + extra;
 
-        // Monthly values for display
-        const baseMonthly = plan.basePrice / MONTHS_IN_YEAR;
-        const extraMonthly = totalExtraCostAnnual / MONTHS_IN_YEAR;
-        const originalMonthlyTotal = originalAnnualTotal / MONTHS_IN_YEAR;
-        const discountedMonthlyTotal = discountedAnnualTotal / MONTHS_IN_YEAR;
-        const costPerGameMonthly = discountedMonthlyTotal / totalGameCount;
+        // discounted totals
+        const discountedTotalCost = originalTotalCost * DISCOUNT_RATE;
+        const costPerGame = (discountedTotalCost / totalGameCount).toFixed(2);
 
         const includedFormatted = plan.included.toLocaleString();
         const extraFormatted = `+${extra.toLocaleString()}`;
@@ -166,36 +146,32 @@ document.addEventListener('DOMContentLoaded', () => {
         setRow(includedGames, 'Included games:', includedFormatted);
         setRow(extraGames, 'Extra games:', extraFormatted);
         setRow(totalGames, 'Total games:', totalFormatted, true);
-
-        setRow(
-          basePrice,
-          'Base price (pre-discount, per month):',
-          `${formatMoney(baseMonthly)}/mo`
-        );
+        setRow(basePrice, 'Base price (pre-discount):', `$${formatCurrency(plan.basePrice)}`);
         setRow(
           additionalCost,
-          'Additional cost (pre-discount, per month):',
-          extra > 0 ? `+${formatMoney(extraMonthly)}/mo` : '+$0/mo'
+          'Additional cost (pre-discount):',
+          `+$${formatCurrency(totalExtraCost)}`
         );
         setRow(
           annualTotal,
-          'Total per month:',
-          `${formatMoney(discountedMonthlyTotal)}/mo (was ${formatMoney(originalMonthlyTotal)}/mo)`,
+          'Total:',
+          `$${formatCurrency(discountedTotalCost)} (was $${formatCurrency(originalTotalCost)})`,
           true,
           true
         );
         setRow(
           effectiveCost,
-          'Effective cost per game (BF, per month):',
-          formatMoney(costPerGameMonthly)
+          'Effective cost per game (BF):',
+          `$${costPerGame}`
         );
 
-        setPriceHeader(originalAnnualTotal, discountedAnnualTotal);
+        // ✅ Header still uses annual totals internally, but displays monthly
+        setPriceHeader(originalTotalCost, discountedTotalCost);
         toggleLabel.textContent = link.textContent.trim();
 
         if (priceNote) {
           priceNote.textContent =
-            `Black Friday 35% off – was ${formatMoney(originalMonthlyTotal)}/mo, now ${formatMoney(discountedMonthlyTotal)}/mo for ${totalFormatted} games.`;
+            `Black Friday 35% off – was $${formatCurrency(originalTotalCost)}, now $${formatCurrency(discountedTotalCost)} for ${totalFormatted} games.`;
         }
 
         flash(priceHeader);
