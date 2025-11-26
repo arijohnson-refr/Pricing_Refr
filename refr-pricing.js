@@ -3,7 +3,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const DISCOUNT_RATE = 0.65;
 
-  // ✅ Updated: always show 2 decimals when there are cents (e.g. 0.50, 1.20)
+  // Always show 2 decimals when there are cents (e.g. 0.50, 1.20)
   const formatCurrency = (value) => {
     const rounded = Math.round(value * 100) / 100;
     const isWhole = Number.isInteger(rounded);
@@ -14,23 +14,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  // Original (pre-discount) pricing
+  // Original (pre-discount) pricing — UPDATED BASE PRICES
   const plans = [
     {
       className: 'pricing-plan-card-starter',
-      basePrice: 250,
+      basePrice: 240,     // 20/mo → 240 yearly
       included: 200,
       extraPrice: 1.25
     },
     {
       className: 'pricing-plan-card-professional',
-      basePrice: 750,
+      basePrice: 720,     // 60/mo → 720 yearly
       included: 1000,
       extraPrice: 0.75
     },
     {
       className: 'pricing-plan-card-commercial',
-      basePrice: 2500,
+      basePrice: 2400,    // 200/mo → 2400 yearly
       included: 5000,
       extraPrice: 0.50
     }
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => el.classList.remove('changed'), 650);
     };
 
-    // ✅ Updated: display monthly price (annual ÷ 12) in the top header
+    // Display monthly price (annual ÷ 12) in header
     const setPriceHeader = (originalTotal, discountedTotal) => {
       if (!priceHeader) return;
 
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
           `$${costPerGame}`
         );
 
-        // ✅ Header still uses annual totals internally, but displays monthly
+        // Header still uses annual totals internally, but displays monthly
         setPriceHeader(originalTotalCost, discountedTotalCost);
         toggleLabel.textContent = link.textContent.trim();
 
