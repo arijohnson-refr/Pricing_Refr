@@ -251,45 +251,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // --- Customer.io helper (supports legacy _cio or new cioanalytics) ---
-  const sendToCustomerIO = ({ email, firstName, lastName }) => {
-    try {
-      // Legacy JS snippet
-      if (window._cio && typeof window._cio.identify === 'function') {
-        window._cio.identify({
-          id: email, // using email as identifier
-          email: email,
-          first_name: firstName,
-          last_name: lastName,
-          created_at: Math.floor(Date.now() / 1000)
-        });
+const sendToCustomerIO = ({ email, firstName, lastName }) => {
+  try {
+    // 💡 New JS client (recommended)
+    if (window.cioanalytics && typeof window.cioanalytics.identify === 'function') {
+      // New client: id is a separate argument
+      window.cioanalytics.identify(email, {
+        email,
+        first_name: firstName,
+        last_name: lastName,
+      });
 
-        if (typeof window._cio.track === 'function') {
-          window._cio.track('pricing_start_free_trial', {
-            source: 'pricing_page_modal'
-          });
-        }
-      }
-      // Newer JS library name (if you're using it)
-      else if (window.cioanalytics && typeof window.cioanalytics.identify === 'function') {
-        window.cioanalytics.identify(email, {
-          email,
-          first_name: firstName,
-          last_name: lastName
+      if (typeof window.cioanalytics.track === 'function') {
+        window.cioanalytics.track('pricing_start_free_trial', {
+          source: 'pricing_page_modal',
         });
-
-        if (typeof window.cioanalytics.track === 'function') {
-          window.cioanalytics.track('pricing_start_free_trial', {
-            source: 'pricing_page_modal'
-          });
-        }
-      } else {
-        console.warn('Customer.io JS snippet not detected on this page.');
       }
-    } catch (err) {
-      console.error('Error sending data to Customer.io', err);
     }
-  };
+
+    // 💡 Legacy snippet (_cio)
+    else if (window._cio && typeof window._cio.identify === 'function') {
+      // Old snippet: id is inside the object
+      window._cio.identify({
+        id: email, // using email as identifier
+        email,
+        first_name: firstName,
+        last_name: lastName,
+        created_at: Math.floor(Date.now() / 1000),
+      });
+
+      if (typeof window._cio.track === 'function') {
+        window._cio.track('pricing_start_free_trial', {
+          source: 'pricing_page_modal',
+        });
+      }
+    } else {
+      console.warn('Customer.io JS snippet not detected on this page.');
+    }
+  } catch (err) {
+    console.error('Error sending data to Customer.io', err);
+  }
+};
+
 
   // --- Form submit handler ---
   form.addEventListener('submit', (e) => {
