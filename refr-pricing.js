@@ -197,20 +197,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ===== START FREE TRIAL MODAL + CUSTOMER.IO HOOKUP =====
 document.addEventListener('DOMContentLoaded', () => {
-  const overlay  = document.getElementById('trial-modal-overlay');
-  const form     = document.getElementById('trial-modal-form');
-  const errorEl  = document.getElementById('trial-modal-error');
+  const overlay = document.getElementById('trial-modal-overlay');
+  const form = document.getElementById('trial-modal-form');
+  const errorEl = document.getElementById('trial-modal-error');
   const closeBtn = document.querySelector('.trial-modal-close');
 
   const TRIAL_URL = 'https://app.refrsports.com/signup';
 
-  // If the modal HTML isn't on this page, don't do anything.
-  if (!overlay || !form) {
-    console.warn('[Trial Modal] Overlay or form not found in DOM – modal JS skipped.');
-    return;
-  }
+  if (!overlay || !form) return;
 
-  // ------- Modal open / close -------
   const openModal = () => {
     overlay.classList.add('is-open');
     overlay.setAttribute('aria-hidden', 'false');
@@ -222,15 +217,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeModal = () => {
     overlay.classList.remove('is-open');
     overlay.setAttribute('aria-hidden', 'true');
-    if (errorEl) errorEl.textContent = '';
+    errorEl && (errorEl.textContent = '');
     form.reset();
   };
 
-  // Attach to all "Start free trial" buttons
+  // Attach to all Start Free Trial buttons that you marked
   const trialButtons = document.querySelectorAll('[data-trial-btn="true"]');
   trialButtons.forEach((btn) => {
     btn.addEventListener('click', (e) => {
-      e.preventDefault();   // stop navigation
+      e.preventDefault();         // stop navigation
       e.stopPropagation();
       openModal();
     });
@@ -245,7 +240,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   overlay.addEventListener('click', (e) => {
-    // click outside the modal closes it
     if (e.target === overlay) {
       closeModal();
     }
@@ -257,84 +251,60 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ------- Customer.io send helper -------
+  // --- Customer.io helper (supports legacy _cio or new cioanalytics) ---
   const sendToCustomerIO = ({ email, firstName, lastName }) => {
-    const traits = {
-      email: email,
-      first_name: firstName,
-      last_name: lastName
-    };
+    try {
+      // Legacy JS snippet
+      if (window._cio && typeof window._cio.identify === 'function') {
+        window._cio.identify({
+          id: email, // using email as identifier
+          email: email,
+          first_name: firstName,
+          last_name: lastName,
+          created_at: Math.floor(Date.now() / 1000)
+        });
 
-    const doSend = () => {
-      try {
-        // NEW JS client (Pipelines, using cioanalytics)
-        if (window.cioanalytics && typeof window.cioanalytics.identify === 'function') {
-          console.log('[Customer.io] identify via cioanalytics', { email, traits });
-
-          // New client: id is separate argument. We use email as the id.
-          window.cioanalytics.identify(email, traits);
-
-          if (typeof window.cioanalytics.track === 'function') {
-            window.cioanalytics.track('pricing_start_free_trial', {
-              source: 'pricing_page_modal'
-            });
-          }
-        }
-
-        // Legacy _cio (Track API) fallback
-        else if (window._cio && typeof window._cio.identify === 'function') {
-          console.log('[Customer.io] identify via _cio', { email, traits });
-
-          window._cio.identify({
-            id: email,
-            email: email,
-            first_name: firstName,
-            last_name: lastName,
-            created_at: Math.floor(Date.now() / 1000)
+        if (typeof window._cio.track === 'function') {
+          window._cio.track('pricing_start_free_trial', {
+            source: 'pricing_page_modal'
           });
-
-          if (typeof window._cio.track === 'function') {
-            window._cio.track('pricing_start_free_trial', {
-              source: 'pricing_page_modal'
-            });
-          }
         }
-
-        else {
-          console.warn('[Customer.io] JS client not detected (cioanalytics or _cio missing).');
-        }
-      } catch (err) {
-        console.error('[Customer.io] Error sending data', err);
       }
-    };
+      // Newer JS library name (if you're using it)
+      else if (window.cioanalytics && typeof window.cioanalytics.identify === 'function') {
+        window.cioanalytics.identify(email, {
+          email,
+          first_name: firstName,
+          last_name: lastName
+        });
 
-    // If the new client exposes `.ready`, use it to ensure the library is fully loaded
-    if (window.cioanalytics && typeof window.cioanalytics.ready === 'function') {
-      window.cioanalytics.ready(() => {
-        console.log('[Customer.io] ready() fired – sending identify/track');
-        doSend();
-      });
-    } else {
-      // Fall back: send immediately (buffered by snippet if library still loading)
-      doSend();
+        if (typeof window.cioanalytics.track === 'function') {
+          window.cioanalytics.track('pricing_start_free_trial', {
+            source: 'pricing_page_modal'
+          });
+        }
+      } else {
+        console.warn('Customer.io JS snippet not detected on this page.');
+      }
+    } catch (err) {
+      console.error('Error sending data to Customer.io', err);
     }
   };
 
-  // ------- Form submit handler -------
+  // --- Form submit handler ---
   form.addEventListener('submit', (e) => {
     e.preventDefault();
 
     const firstName = (document.getElementById('trial-first-name')?.value || '').trim();
-    const lastName  = (document.getElementById('trial-last-name')?.value || '').trim();
-    const email     = (document.getElementById('trial-email')?.value || '').trim();
+    const lastName = (document.getElementById('trial-last-name')?.value || '').trim();
+    const email = (document.getElementById('trial-email')?.value || '').trim();
 
     // Basic validation
     if (!firstName || !lastName || !email) {
       if (errorEl) errorEl.textContent = 'Please fill out all fields before continuing.';
       return;
     }
-
-    // Simple email check
+    // simple email check
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
       if (errorEl) errorEl.textContent = 'Please enter a valid email address.';
       return;
@@ -342,14 +312,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (errorEl) errorEl.textContent = '';
 
-    // Send to Customer.io (this creates or updates the person)
+    // Send to Customer.io
     sendToCustomerIO({ email, firstName, lastName });
 
-    // Open signup in new tab
+    // Open signup in a new tab/window
     window.open(TRIAL_URL, '_blank', 'noopener');
 
     // Close modal
     closeModal();
   });
 });
+
 
