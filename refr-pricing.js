@@ -212,9 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const openModal = () => {
     overlay.classList.add('is-open');
     overlay.setAttribute('aria-hidden', 'false');
-
-    const firstInput = document.getElementById('trial-first-name');
-    if (firstInput) firstInput.focus();
+    // no auto-focus on first input
   };
 
   const closeModal = () => {
