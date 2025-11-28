@@ -194,8 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-
-<script>
 // ===== START FREE TRIAL MODAL — Webflow + Customer.io =====
 document.addEventListener('DOMContentLoaded', () => {
   const overlay  = document.getElementById('trial-modal-overlay');
@@ -361,4 +359,3 @@ document.addEventListener('DOMContentLoaded', () => {
     closeModal();
   });
 });
-</script>
