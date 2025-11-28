@@ -2161,7 +2161,8 @@
   color: #e5e7eb;
 }
 
-.trial-modal-field input {
+.trial-modal-field input,
+.trial-modal-field select {
   width: 100%;
   border-radius: 10px;
   border: 1px solid #4b5563;
@@ -2172,6 +2173,14 @@
   outline: none;
   transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
+
+.trial-modal-field select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: none; /* Webflow / browser will still draw native caret */
+}
+
 
 .trial-modal-field input::placeholder {
   color: #6b7280;
