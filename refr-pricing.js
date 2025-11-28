@@ -195,17 +195,22 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// ===== START FREE TRIAL MODAL + CUSTOMER.IO HOOKUP =====
+<script>
+// ===== START FREE TRIAL MODAL — Webflow + Customer.io =====
 document.addEventListener('DOMContentLoaded', () => {
-  const overlay = document.getElementById('trial-modal-overlay');
-  const form = document.getElementById('trial-modal-form');
-  const errorEl = document.getElementById('trial-modal-error');
+  const overlay  = document.getElementById('trial-modal-overlay');
+  const form     = document.getElementById('trial-modal-form');
+  const errorEl  = document.getElementById('trial-modal-error');
   const closeBtn = document.querySelector('.trial-modal-close');
 
   const TRIAL_URL = 'https://app.refrsports.com/signup';
 
-  if (!overlay || !form) return;
+  if (!overlay || !form) {
+    console.warn('[Trial Modal] Overlay or form not found in DOM – modal JS skipped.');
+    return;
+  }
 
+  // ------- Modal open / close -------
   const openModal = () => {
     overlay.classList.add('is-open');
     overlay.setAttribute('aria-hidden', 'false');
@@ -217,21 +222,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeModal = () => {
     overlay.classList.remove('is-open');
     overlay.setAttribute('aria-hidden', 'true');
-    errorEl && (errorEl.textContent = '');
+    if (errorEl) errorEl.textContent = '';
     form.reset();
   };
 
-  // Attach to all Start Free Trial buttons that you marked
+  // Attach to all Start Free Trial buttons
   const trialButtons = document.querySelectorAll('[data-trial-btn="true"]');
   trialButtons.forEach((btn) => {
     btn.addEventListener('click', (e) => {
-      e.preventDefault();         // stop navigation
+      e.preventDefault();
       e.stopPropagation();
       openModal();
     });
   });
 
-  // Close handlers
+  // Close button
   if (closeBtn) {
     closeBtn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -239,72 +244,98 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Click outside modal
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) {
       closeModal();
     }
   });
 
+  // ESC key closes modal
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && overlay.classList.contains('is-open')) {
       closeModal();
     }
   });
 
-  // --- Customer.io helper (supports legacy _cio or new cioanalytics) ---
-  const sendToCustomerIO = ({ email, firstName, lastName }) => {
-    try {
-      // Legacy JS snippet
-      if (window._cio && typeof window._cio.identify === 'function') {
-        window._cio.identify({
-          id: email, // using email as identifier
-          email: email,
-          first_name: firstName,
-          last_name: lastName,
-          created_at: Math.floor(Date.now() / 1000)
-        });
+  // ------- Customer.io helper (role_id included) -------
+  const sendToCustomerIO = ({ email, firstName, lastName, roleId }) => {
+    const traits = {
+      email: email,
+      first_name: firstName,
+      last_name: lastName,
+      role_id: roleId
+    };
 
-        if (typeof window._cio.track === 'function') {
-          window._cio.track('pricing_start_free_trial', {
-            source: 'pricing_page_modal'
-          });
-        }
-      }
-      // Newer JS library name (if you're using it)
-      else if (window.cioanalytics && typeof window.cioanalytics.identify === 'function') {
-        window.cioanalytics.identify(email, {
-          email,
-          first_name: firstName,
-          last_name: lastName
-        });
+    const doSend = () => {
+      try {
+        // New JS client (cioanalytics)
+        if (window.cioanalytics && typeof window.cioanalytics.identify === 'function') {
+          console.log('[Customer.io] identify via cioanalytics', { email, traits });
 
-        if (typeof window.cioanalytics.track === 'function') {
-          window.cioanalytics.track('pricing_start_free_trial', {
-            source: 'pricing_page_modal'
-          });
+          // email as id
+          window.cioanalytics.identify(email, traits);
+
+          if (typeof window.cioanalytics.track === 'function') {
+            window.cioanalytics.track('pricing_start_free_trial', {
+              source: 'pricing_page_modal',
+              role_id: roleId
+            });
+          }
         }
-      } else {
-        console.warn('Customer.io JS snippet not detected on this page.');
+        // Legacy client (_cio) fallback
+        else if (window._cio && typeof window._cio.identify === 'function') {
+          console.log('[Customer.io] identify via _cio', { email, traits });
+
+          window._cio.identify({
+            id: email,
+            email: email,
+            first_name: firstName,
+            last_name: lastName,
+            role_id: roleId,
+            created_at: Math.floor(Date.now() / 1000)
+          });
+
+          if (typeof window._cio.track === 'function') {
+            window._cio.track('pricing_start_free_trial', {
+              source: 'pricing_page_modal',
+              role_id: roleId
+            });
+          }
+        } else {
+          console.warn('[Customer.io] client not detected (cioanalytics / _cio missing).');
+        }
+      } catch (err) {
+        console.error('[Customer.io] Error sending data', err);
       }
-    } catch (err) {
-      console.error('Error sending data to Customer.io', err);
+    };
+
+    // If available, wait for cioanalytics to be fully ready
+    if (window.cioanalytics && typeof window.cioanalytics.ready === 'function') {
+      window.cioanalytics.ready(() => {
+        console.log('[Customer.io] ready() fired – sending identify/track');
+        doSend();
+      });
+    } else {
+      doSend();
     }
   };
 
-  // --- Form submit handler ---
+  // ------- Form submit handler -------
   form.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const firstName = (document.getElementById('trial-first-name')?.value || '').trim();
-    const lastName = (document.getElementById('trial-last-name')?.value || '').trim();
-    const email = (document.getElementById('trial-email')?.value || '').trim();
+    const firstName  = (document.getElementById('trial-first-name')?.value || '').trim();
+    const lastName   = (document.getElementById('trial-last-name')?.value || '').trim();
+    const email      = (document.getElementById('trial-email')?.value || '').trim();
+    const accountType = (document.getElementById('trial-account-type')?.value || '').trim();
 
-    // Basic validation
-    if (!firstName || !lastName || !email) {
+    // Validation
+    if (!firstName || !lastName || !email || !accountType) {
       if (errorEl) errorEl.textContent = 'Please fill out all fields before continuing.';
       return;
     }
-    // simple email check
+
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
       if (errorEl) errorEl.textContent = 'Please enter a valid email address.';
       return;
@@ -312,15 +343,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (errorEl) errorEl.textContent = '';
 
-    // Send to Customer.io
-    sendToCustomerIO({ email, firstName, lastName });
+    // 1) Send to Customer.io with role_id
+    sendToCustomerIO({
+      email,
+      firstName,
+      lastName,
+      roleId: accountType   // "referee" / "assignor" / "sports_organization"
+    });
 
-    // Open signup in a new tab/window
+    // 2) Open signup in a new tab
     window.open(TRIAL_URL, '_blank', 'noopener');
 
-    // Close modal
+    // 3) Let Webflow store the submission
+    form.submit();
+
+    // 4) Close modal
     closeModal();
   });
 });
-
-
+</script>
