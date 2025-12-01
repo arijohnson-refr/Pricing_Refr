@@ -719,13 +719,15 @@
 
 
 
-/* ---------- Totals Highlight ---------- */
+/* ---------- Totals Highlight (Cyber Monday safe, no block bg) ---------- */
 .pricing-plan-card-commercial .pricing-plan-totals-table .highlight {
-  background: linear-gradient(90deg, #ffd100, #ffb700);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #F5D046;
   font-weight: 800;
+  background: none;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: initial;
 }
+
 
 /* ---------- Demo Button Override ---------- */
 .pricing-plan-card-commercial .pricing-plan-demo {
