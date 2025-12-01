@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (priceNote) {
       priceNote.textContent =
-        `Black Friday 35% off – was $${formatCurrency(defaultOriginalTotal)}, now $${formatCurrency(defaultDiscountedTotal)}.`;
+        `Cyber Monday 35% off – was $${formatCurrency(defaultOriginalTotal)}, now $${formatCurrency(defaultDiscountedTotal)}.`;
     }
 
     setRow(includedGames, 'Included games:', plan.included.toLocaleString());
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     );
     setRow(
       effectiveCost,
-      'Effective cost per game (BF):',
+      'Effective cost per game:',
       `$${(defaultDiscountedTotal / plan.included).toFixed(2)}`
     );
 
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
         );
         setRow(
           effectiveCost,
-          'Effective cost per game (BF):',
+          'Effective cost per game:',
           `$${costPerGame}`
         );
 
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (priceNote) {
           priceNote.textContent =
-            `Black Friday 35% off – was $${formatCurrency(originalTotalCost)}, now $${formatCurrency(discountedTotalCost)} for ${totalFormatted} games.`;
+            `Cyber Monday 35% off – was $${formatCurrency(originalTotalCost)}, now $${formatCurrency(discountedTotalCost)} for ${totalFormatted} games.`;
         }
 
         flash(priceHeader);
