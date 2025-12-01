@@ -389,54 +389,56 @@
 
 
 /* ============================
-   BLACK FRIDAY PROMO BAR THEME
+   CYBER MONDAY PROMO BAR THEME
    ============================ */
 
 .promo-block {
-  background: linear-gradient(120deg, #111, #ffd100, #111) !important;
-  background-size: 220% 220%;
-  color: #fefce8;
-  border-color: rgba(255, 255, 255, 0.25);
+  background: linear-gradient(180deg, #1A0F33 0%, #0D1C52 100%) !important;
+  background-size: 100% 100%;
+  color: #F5D046;
+  border-color: rgba(245, 208, 70, 0.45);
   box-shadow:
-    0 2px 10px rgba(0, 0, 0, 0.7),
-    0 0 18px rgba(255, 209, 0, 0.55);
-  animation: bfBadgeSweep 10s linear infinite;
+    0 2px 10px rgba(0, 0, 0, 0.60),
+    0 0 18px rgba(10, 28, 82, 0.75);
+  animation: none;
 }
 
-/* Inner pill stays dark/glassy so text is readable on bright bar */
+/* Inner pill: glassy dark-blue so yellow pops */
 .promo-inner {
-  background: linear-gradient(135deg, #111, #000);
-  border: 1.5px solid rgba(255, 255, 255, 0.32);
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.10), rgba(7, 17, 52, 0.95));
+  border: 1.5px solid rgba(245, 208, 70, 0.55);
   box-shadow:
-    inset 0 1px 4px rgba(255, 255, 255, 0.18),
-    inset 0 -1px 6px rgba(0, 0, 0, 0.6);
+    inset 0 1px 4px rgba(255, 255, 255, 0.16),
+    inset 0 -1px 6px rgba(0, 0, 0, 0.60);
 }
 
-/* Hover: stronger, but still controlled */
+/* Hover: slightly lifted, deeper blue glow */
 .promo-block:hover {
   transform: translateY(-1px);
   box-shadow:
-    0 6px 18px rgba(0, 0, 0, 0.85),
-    0 0 24px rgba(255, 209, 0, 0.65);
+    0 6px 20px rgba(0, 0, 0, 0.80),
+    0 0 24px rgba(10, 28, 82, 0.95);
 }
 
 .promo-inner:hover {
   transform: translateY(-2px) scale(1.02);
   box-shadow:
-    inset 0 1px 5px rgba(255, 255, 255, 0.26),
-    inset 0 -1px 7px rgba(0, 0, 0, 0.7);
+    inset 0 1px 5px rgba(255, 255, 255, 0.24),
+    inset 0 -1px 7px rgba(0, 0, 0, 0.70),
+    0 0 22px rgba(245, 208, 70, 0.55);
 }
 
 .promo-block:hover .promo-inner {
   transition-delay: 0.05s;
 }
 
-/* Make promo-inner text GOLD so it shows on dark background */
+/* Text color = Cyber Monday yellow accent */
 .promo-inner,
 .promo-inner * {
-  color: #ffd100 !important; /* premium gold */
-  text-shadow: 0 0 4px rgba(0,0,0,0.45); /* subtle definition on bright backgrounds */
+  color: #F5D046 !important;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.55);
 }
+
 
 
 
@@ -1815,7 +1817,7 @@
 
 
 /* ============================
-   BLACK FRIDAY 50% OFF STYLING
+   CYBER MONDAY DISCOUNT STYLING
    ============================ */
 
 /* Restore original title layout */
@@ -1823,12 +1825,12 @@
   display: block;
 }
 
-/* Kill any old BF pill on the title if it still exists */
+/* Kill any old pill on the title if it still exists */
 .pricing-plan-name::after {
   content: none !important;
 }
 
-/* --- Black Friday pill UNDER the "/year" line --- */
+/* --- Cyber Monday pill UNDER the "/year" line --- */
 .pricing-plan-per-year {
   position: relative;
   display: flex;
@@ -1836,9 +1838,9 @@
   align-items: flex-start;
 }
 
-/* Shiny pill */
+/* Cyber Monday pill */
 .pricing-plan-per-year::after {
-  content: "Black Friday · 35% OFF";
+  content: "Cyber Monday · 35% OFF";
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1849,22 +1851,13 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.09em;
-  background: linear-gradient(120deg, #111, #ffd100, #111);
-  background-size: 220% 220%;
-  color: #fefce8;
-  border: 1px solid rgba(255, 255, 255, 0.26);
+  background: linear-gradient(180deg, #1A0F33 0%, #0D1C52 100%);
+  color: #F5D046;
+  border: 1px solid rgba(245, 208, 70, 0.7);
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.55),
-    0 0 14px rgba(255, 209, 0, 0.45);
+    0 0 14px rgba(10, 28, 82, 0.65);
   white-space: nowrap;
-  animation: bfBadgeSweep 6s linear infinite;
-}
-
-/* shimmer sweep reused for pill + promo bar */
-@keyframes bfBadgeSweep {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 120% 50%; }
-  100% { background-position: 0% 50%; }
 }
 
 /* ----- Price layout: original vs discounted ----- */
@@ -1884,16 +1877,14 @@
   transform: translateY(-3px);
 }
 
-/* Discount price (gold, NO shadow) */
+/* Discount price (Cyber Monday yellow accent) */
 .pricing-price-discount {
   font-size: 2.6rem;
   font-weight: 900;
   line-height: 1.1;
-  background: linear-gradient(120deg, #ffd100, #fff4b0, #ffb700);
-  -webkit-background-clip: text;
-  color: transparent;
-  text-shadow: none; /* 👈 fully clean */
+  color: #F5D046;
   letter-spacing: 0.01em;
+  text-shadow: none;
 }
 
 /* Same style for the middle card */
@@ -1901,19 +1892,19 @@
   text-shadow: none;
 }
 
-/* Price note = subtle BF copy */
+/* Price note = Cyber Monday accent color */
 .pricing-plan-price-note {
-  color: #facc15;
+  color: #F5D046;
   font-size: 0.9rem;
   font-weight: 600;
   margin-top: 0.35rem;
 }
 
-/* We still highlight the "Total" row value nicely */
+/* Highlighted "Total" row value uses yellow accent instead of gold gradient */
 .pricing-plan-annual-total .pricing-plan-totals-value.highlight {
-  background: linear-gradient(120deg, #ffd100, #ffb700);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #F5D046;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: initial;
 }
 
 /* Small screens */
@@ -1925,6 +1916,7 @@
     font-size: 0.85rem;
   }
 }
+
 
 /* =====================================
    BLACK FRIDAY HERO VARIANT (combo class)
